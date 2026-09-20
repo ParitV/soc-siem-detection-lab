@@ -25,6 +25,10 @@ sudo ip addr add 192.168.56.20/24 dev eth0
 
 **Note:** DHCP can reassign the Kali VM's address mid-session even after a static assignment. Don't assume the attacker's source IP in Wazuh alerts matches what was configured at the start; verify it directly from the event data (`data.win.eventdata.ipAddress`). In this environment it shifted to 192.168.56.102 partway through testing.
 
+![Alt Text](../screenshots/buide-guide/window-vm-ip.png)
+
+![Alt Text](../screenshots/buide-guide/kali-vm-ip.png)
+
 ## Step 1: Deploy Wazuh (Docker)
 
 ```
@@ -67,9 +71,15 @@ to this:
 ```
 Reload Sysmon's configuration (`sysmon64.exe -c sysmonconfig-export.xml`) before proceeding to Step 4.4. Skipping this step is the most common reason for seeing zero ProcessAccess events later.
 
+![Alt Text](../screenshots/buide-guide/wazuh-installed.png)
+
 ## Step 3: Verify the logging pipeline
 
 Before running any attack simulations, generate some baseline activity (open PowerShell, log out and back in) and confirm the events reach Wazuh's Discover tab (`wazuh-alerts-*`). Confirming events locally in Windows Event Viewer is not sufficient proof the pipeline works end to end. Also confirm that `ossec.conf` on the agent includes a `<localfile>` entry watching the Sysmon channel, since the default agent install can omit it.
+
+![Alt Text](../screenshots/buide-guide/wazuh-test.png)
+
+![Alt Text](../screenshots/buide-guide/wazuh-test-powershell.png)
 
 ## Step 4: Simulate the attacker techniques
 
@@ -114,15 +124,6 @@ C:\Tools\Procdump\procdump64.exe -accepteula -ma lsass.exe C:\Windows\Temp\lsass
 Windows Defender may block this outright with real-time protection enabled; that is itself a valid detection outcome worth documenting. On a fully isolated, offline VM, temporarily disabling real-time protection for this one test is a reasonable trade-off.
 
 This step depends on the Step 2 Sysmon fix being in place; without it, no ProcessAccess evidence is produced regardless of whether the dump succeeds. Each attempt completed successfully per ProcDump's own output (54-72 MB dumps written), and Windows Defender's behavioral engine independently flagged the activity as `Behavior:Win32/DumpLsass.A!attk`.
-
-### 4.5 Scheduled task persistence (T1053.005) — descoped
-```
-schtasks /create /tn "Updater" /tr calc.exe /sc onlogon
-```
-This technique was executed but its detection was not carried through to the final write-ups, to keep the project scope focused. Remove the task afterward if it's still present:
-```
-schtasks /delete /tn "Updater" /f
-```
 
 ## Step 5: Detection results
 
