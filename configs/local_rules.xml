@@ -1,0 +1,34 @@
+<ossec_config>
+<group name="local,sysmon,attack,">
+  <rule id="100010" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.system.eventID">^10$</field>
+    <field name="win.eventdata.targetImage" type="pcre2">(?i)\\lsass\.exe$</field>
+    <description>Possible LSASS memory access - credential dumping attempt</description>
+    <mitre>
+      <id>T1003.001</id>
+    </mitre>
+  </rule>
+</group>
+<group name="local,syslog,sysmon,">
+  <rule id="100004" level="14">
+    <if_group>sysmon_event10</if_group>
+    <field name="win.eventdata.targetImage" type="pcre2">(?i)lsass\.exe$</field>
+    <field name="win.eventdata.sourceImage" type="pcre2">(?i)procdump</field>
+    <description>Possible credential dumping: process access to LSASS via ProcDump</description>
+    <mitre>
+      <id>T1003.001</id>
+    </mitre>
+  </rule>
+</group>
+<group name="local,syslog,sysmon,">
+  <rule id="100002" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)-enc(odedcommand)?\s</field>
+    <description>Suspicious encoded PowerShell command executed</description>
+    <mitre>
+      <id>T1059.001</id>
+    </mitre>
+  </rule>
+</group>
+</ossec_config>
