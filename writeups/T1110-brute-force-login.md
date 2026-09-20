@@ -5,16 +5,19 @@
 **Date/time:** 2026-09-19, 15:02:25 UTC
 
 ## Summary
-![Alt Text](../screenshots/brute-force-command.png)
+
+![Alt Text](../screenshots/T1110/brute-force-command.png)
+
 An SMB password-guessing attack was run against the local account `paritvr` using Hydra and netexec. Wazuh's built-in Windows ruleset detected the activity without any custom rule, generating five Event ID 4625 ("account failed to log on") alerts. The event fields confirm a valid username with automated password guessing, network-based access, and five distinct connection attempts inside a 47-millisecond window, a timing and volume pattern that is not consistent with manual login attempts.
 
 ## Alert Summary
-
 - **What fired:** Windows Security Event ID 4625, five times, ingested through Wazuh's default Windows ruleset. No custom rule was needed.
 - **Time:** five attempts within approximately 47 milliseconds of each other (15:02:25.036 to 15:02:25.083 UTC).
 - **Note:** with only five attempts, this test did not generate enough volume to also cross Wazuh's repeated-failure correlation threshold. That is expected at this scale, not a detection gap.
 
 ## Evidence
+
+![Alt Text](../screenshots/T1110/brute-force-logs.png)
 
 | Field | Value | What it shows |
 |---|---|---|

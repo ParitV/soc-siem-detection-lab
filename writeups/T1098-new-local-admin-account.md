@@ -10,6 +10,8 @@ A new local account was created and immediately escalated to the local Administr
 
 ## Alert Summary
 
+![Alt Text](../screenshots/T1098/new-admin-command.png)
+
 | Time (UTC) | Event | Rule | Level |
 |---|---|---|---|
 | 05:12:27.529 | Event 4720, account `attacker` created | 60109, "User account enabled or created" | 8 (Medium) |
@@ -17,6 +19,10 @@ A new local account was created and immediately escalated to the local Administr
 | 05:12:38.552 (+11s) | Event 4732, added to "Administrators" group | 60154, "Administrators Group Changed" | 12 (High), `rule.mail: true` |
 
 ## Evidence
+
+![Alt Text](../screenshots/T1098/new-admin-logs.png)
+
+![Alt Text](../screenshots/T1098/new-admin-logs2.png)
 
 - **SID chain:** `subjectUserSid` (`...-1001`, `paritvr`) performed every action. `targetSid` on the 4720 event and `memberSid` on both 4732 events all point to the same `...-1002` (`attacker`), proving one continuous sequence rather than three unrelated events.
 - **The 20-millisecond gap** between account creation and the "Users" group addition is automatic Windows behavior on every new account, not a deliberate attacker action.
