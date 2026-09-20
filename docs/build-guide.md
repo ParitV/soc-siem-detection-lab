@@ -25,9 +25,9 @@ sudo ip addr add 192.168.56.20/24 dev eth0
 
 **Note:** DHCP can reassign the Kali VM's address mid-session even after a static assignment. Don't assume the attacker's source IP in Wazuh alerts matches what was configured at the start; verify it directly from the event data (`data.win.eventdata.ipAddress`). In this environment it shifted to 192.168.56.102 partway through testing.
 
-![Alt Text](../screenshots/buide-guide/window-vm-ip.png)
+![Alt Text](../screenshots/build-guide/window-vm-ip.png)
 
-![Alt Text](../screenshots/buide-guide/kali-vm-ip.png)
+![Alt Text](../screenshots/build-guide/kali-vm-ip.png)
 
 ## Step 1: Deploy Wazuh (Docker)
 
@@ -71,15 +71,15 @@ to this:
 ```
 Reload Sysmon's configuration (`sysmon64.exe -c sysmonconfig-export.xml`) before proceeding to Step 4.4. Skipping this step is the most common reason for seeing zero ProcessAccess events later.
 
-![Alt Text](../screenshots/buide-guide/wazuh-installed.png)
+![Alt Text](../screenshots/build-guide/wazuh-installed.png)
 
 ## Step 3: Verify the logging pipeline
 
 Before running any attack simulations, generate some baseline activity (open PowerShell, log out and back in) and confirm the events reach Wazuh's Discover tab (`wazuh-alerts-*`). Confirming events locally in Windows Event Viewer is not sufficient proof the pipeline works end to end. Also confirm that `ossec.conf` on the agent includes a `<localfile>` entry watching the Sysmon channel, since the default agent install can omit it.
 
-![Alt Text](../screenshots/buide-guide/wazuh-test.png)
+![Alt Text](../screenshots/build-guide/wazuh-test.png)
 
-![Alt Text](../screenshots/buide-guide/wazuh-test-powershell.png)
+![Alt Text](../screenshots/build-guide/wazuh-test-powershell.png)
 
 ## Step 4: Simulate the attacker techniques
 
